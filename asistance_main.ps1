@@ -92,7 +92,8 @@ $archivoHTML = [System.IO.Path]::Combine([Environment]::GetFolderPath("Desktop")
 
 # ✅ Esta línea es la clave
 $utf8BOM = New-Object System.Text.UTF8Encoding $true
-[System.IO.File]::WriteAllText($archivoHTML, $htmlContent, $utf8BOM)
+$htmlContent | Out-File -FilePath $archivoHTML -Encoding utf8
+
 
 Start-Process $archivoHTML
 Write-Host "`n✅ Formulario generado en el escritorio. El cliente debe completarlo para enviar la solicitud."

@@ -1,7 +1,8 @@
 # === Asistance 2.0: Formulario local con envío controlado ===
 
-# 1. Generar Check ID
+# 1. Generar Check ID y timestamp
 $nombre = "Pablo Arman"
+$timestamp = Get-Date -Format "dd/MM/yyyy HH:mm:ss"
 $check_id = (Get-Date -Format "yyyyMMddHHmmss") + "_" + $nombre.Replace(" ", "").ToUpper()
 
 # 2. Recolectar datos técnicos
@@ -22,7 +23,7 @@ $htmlContent = @"
   <title>Solicitud de Asistencia Técnica</title>
   <style>
     body {
-      font-family: "Segoe UI", sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       background-color: #f4f4f4;
       display: flex;
       justify-content: center;
@@ -39,6 +40,11 @@ $htmlContent = @"
       width: 100%;
       max-width: 450px;
     }
+    .timestamp {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 10px;
+    }
     textarea {
       width: 100%;
       height: 100px;
@@ -46,6 +52,8 @@ $htmlContent = @"
       font-size: 14px;
       padding: 10px;
       resize: none;
+      border: 1px solid #ccc;
+      border-radius: 4px;
     }
     button {
       background-color: #28a745;
@@ -64,6 +72,7 @@ $htmlContent = @"
 </head>
 <body>
   <div class="form-container">
+    <div class="timestamp">🕒 Ejecutado el $timestamp</div>
     <h2>Solicitud de asistencia técnica</h2>
     <p>Por favor, describí el problema:</p>
     <form method="POST" action="https://script.google.com/macros/s/AKfycbxZzyCZhE23Rpd3ZPJ_a5t5-g5jeMaClesIVnOZ22AUnGrplTetVrfJIKCv_NLh1Yyk/exec">

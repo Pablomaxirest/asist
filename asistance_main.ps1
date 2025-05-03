@@ -72,7 +72,7 @@ $htmlContent = @"
 </head>
 <body>
   <div class="form-container">
-    <div class="timestamp">🕒 Ejecutado el $timestamp</div>
+    <div class="timestamp">Ejecutado el $timestamp</div>
     <h2>Solicitud de asistencia técnica</h2>
     <p>Por favor, describí el problema:</p>
     <form method="POST" action="https://script.google.com/macros/s/AKfycbxZzyCZhE23Rpd3ZPJ_a5t5-g5jeMaClesIVnOZ22AUnGrplTetVrfJIKCv_NLh1Yyk/exec">
@@ -93,10 +93,10 @@ $htmlContent = @"
 </html>
 "@
 
-# 4. Guardar HTML en el escritorio y abrirlo
+# 4. Guardar HTML en el escritorio con codificación UTF-8 sin BOM
 $archivoHTML = [System.IO.Path]::Combine([Environment]::GetFolderPath("Desktop"), "asistance_formulario.html")
 $utf8NoBom = New-Object System.Text.UTF8Encoding $false
 [System.IO.File]::WriteAllText($archivoHTML, $htmlContent, $utf8NoBom)
 
+# 5. Abrir el formulario en el navegador
 Start-Process $archivoHTML
-Write-Host "`n✅ Formulario generado en el escritorio. El cliente debe completarlo para enviar la solicitud."

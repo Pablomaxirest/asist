@@ -1,8 +1,11 @@
 # === Asistance 2.0: Formulario local con envío controlado ===
 
+# 1. Generar Check ID
 $nombre = "Pablo Arman"
 $check_id = (Get-Date -Format "yyyyMMddHHmmss") + "_" + $nombre.Replace(" ", "").ToUpper()
+$horaEjecucion = Get-Date -Format "dd MM yyyy HH:mm:ss"
 
+# 2. Recolectar datos técnicos
 $equipo     = $env:COMPUTERNAME
 $usuario    = $env:USERNAME
 $so         = (Get-WmiObject Win32_OperatingSystem).Caption
@@ -10,8 +13,8 @@ $ram        = "{0:N2} GB" -f ((Get-WmiObject Win32_ComputerSystem).TotalPhysical
 $procesador = (Get-WmiObject Win32_Processor).Name
 $ip         = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddress -notlike "169.*" } | Select-Object -First 1).IPAddress
 $impresoras = (Get-Printer | Select-Object -ExpandProperty Name) -join "; "
-$fechaHora  = Get-Date -Format "dd MM yyyy HH:mm:ss"
 
+# 3. Contenido HTML con codificación UTF-8 con BOM
 $htmlContent = @"
 <!DOCTYPE html>
 <html lang="es">
@@ -20,7 +23,7 @@ $htmlContent = @"
   <title>Solicitud de Asistencia Técnica</title>
   <style>
     body {
-      font-family: "Segoe UI", sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       background-color: #f4f4f4;
       display: flex;
       justify-content: center;
@@ -35,7 +38,7 @@ $htmlContent = @"
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       text-align: center;
       width: 100%;
-      max-width: 450px;
+      max-width: 480px;
     }
     textarea {
       width: 100%;
@@ -58,16 +61,11 @@ $htmlContent = @"
     button:hover {
       background-color: #218838;
     }
-    .ejecutado {
-      font-size: 13px;
-      color: #888;
-      margin-bottom: 10px;
-    }
   </style>
 </head>
 <body>
   <div class="form-container">
-    <p class="ejecutado">Ejecutado el $fechaHora</p>
+    <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Ejecutado el $horaEjecucion</p>
     <h2><strong>Solicitud de asistencia técnica</strong></h2>
     <p>Por favor, describí el problema:</p>
     <form method="POST" action="https://script.google.com/macros/s/AKfycbxZzyCZhE23Rpd3ZPJ_a5t5-g5jeMaClesIVnOZ22AUnGrplTetVrfJIKCv_NLh1Yyk/exec">
@@ -88,12 +86,10 @@ $htmlContent = @"
 </html>
 "@
 
+# 4. Guardar el archivo en el Escritorio como UTF-8 con BOM
 $archivoHTML = [System.IO.Path]::Combine([Environment]::GetFolderPath("Desktop"), "asistance_formulario.html")
+$utf8WithBOM = New-Object System.Text.UTF8Encoding($true)
+[System.IO.File]::WriteAllText($archivoHTML, $htmlContent, $utf8WithBOM)
 
-# ✅ Esta línea es la clave
-$utf8BOM = New-Object System.Text.UTF8Encoding $true
-$htmlContent | Out-File -FilePath $archivoHTML -Encoding utf8
-
-
+# 5. Abrir el archivo
 Start-Process $archivoHTML
-Write-Host "`n✅ Formulario generado en el escritorio. El cliente debe completarlo para enviar la solicitud."

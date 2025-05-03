@@ -86,7 +86,7 @@ $htmlContent = @"
 
 # 4. Guardar HTML en el escritorio y abrirlo
 $archivoHTML = [System.IO.Path]::Combine([Environment]::GetFolderPath("Desktop"), "asistance_formulario.html")
-Set-Content -Path $archivoHTML -Value $htmlContent -Encoding UTF8
+[System.IO.File]::WriteAllText($archivoHTML, $htmlContent, [System.Text.Encoding]::UTF8)
 
 Start-Process $archivoHTML
 Write-Host "`n✅ Formulario generado en el escritorio. El cliente debe completarlo para enviar la solicitud."

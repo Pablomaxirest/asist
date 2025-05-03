@@ -1,10 +1,8 @@
 # === Asistance 2.0: Formulario local con envío controlado ===
 
-# 1. Generar Check ID
 $nombre = "Pablo Arman"
 $check_id = (Get-Date -Format "yyyyMMddHHmmss") + "_" + $nombre.Replace(" ", "").ToUpper()
 
-# 2. Recolectar datos técnicos
 $equipo     = $env:COMPUTERNAME
 $usuario    = $env:USERNAME
 $so         = (Get-WmiObject Win32_OperatingSystem).Caption
@@ -14,13 +12,12 @@ $ip         = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddres
 $impresoras = (Get-Printer | Select-Object -ExpandProperty Name) -join "; "
 $fechaHora  = Get-Date -Format "dd MM yyyy HH:mm:ss"
 
-# 3. Generar HTML local con formulario manual
 $htmlContent = @"
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Solicitud de Asistencia T&eacute;cnica</title>
+  <title>Solicitud de Asistencia Técnica</title>
   <style>
     body {
       font-family: "Segoe UI", sans-serif;
@@ -71,8 +68,8 @@ $htmlContent = @"
 <body>
   <div class="form-container">
     <p class="ejecutado">Ejecutado el $fechaHora</p>
-    <h2><strong>Solicitud de asistencia t&eacute;cnica</strong></h2>
-    <p>Por favor, describ&iacute; el problema:</p>
+    <h2><strong>Solicitud de asistencia técnica</strong></h2>
+    <p>Por favor, describí el problema:</p>
     <form method="POST" action="https://script.google.com/macros/s/AKfycbxZzyCZhE23Rpd3ZPJ_a5t5-g5jeMaClesIVnOZ22AUnGrplTetVrfJIKCv_NLh1Yyk/exec">
       <textarea name="problema" required></textarea>
       <input type="hidden" name="nombre" value="$nombre">
@@ -91,9 +88,11 @@ $htmlContent = @"
 </html>
 "@
 
-# 4. Guardar HTML en el escritorio y abrirlo
 $archivoHTML = [System.IO.Path]::Combine([Environment]::GetFolderPath("Desktop"), "asistance_formulario.html")
-[System.IO.File]::WriteAllText($archivoHTML, $htmlContent, [System.Text.Encoding]::UTF8)
+
+# ✅ Esta línea es la clave
+$utf8BOM = New-Object System.Text.UTF8Encoding $true
+[System.IO.File]::WriteAllText($archivoHTML, $htmlContent, $utf8BOM)
 
 Start-Process $archivoHTML
 Write-Host "`n✅ Formulario generado en el escritorio. El cliente debe completarlo para enviar la solicitud."

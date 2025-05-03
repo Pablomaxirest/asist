@@ -22,7 +22,7 @@ $htmlContent = @"
   <title>Solicitud de Asistencia Técnica</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
+      font-family: "Segoe UI", sans-serif;
       background-color: #f4f4f4;
       display: flex;
       justify-content: center;
@@ -46,8 +46,6 @@ $htmlContent = @"
       font-size: 14px;
       padding: 10px;
       resize: none;
-      border: 1px solid #ccc;
-      border-radius: 4px;
     }
     button {
       background-color: #28a745;
@@ -88,9 +86,8 @@ $htmlContent = @"
 
 # 4. Guardar HTML en el escritorio y abrirlo
 $archivoHTML = [System.IO.Path]::Combine([Environment]::GetFolderPath("Desktop"), "asistance_formulario.html")
-[System.IO.File]::WriteAllText($archivoHTML, $htmlContent, [System.Text.Encoding]::UTF8)
+$utf8NoBom = New-Object System.Text.UTF8Encoding $false
+[System.IO.File]::WriteAllText($archivoHTML, $htmlContent, $utf8NoBom)
 
 Start-Process $archivoHTML
 Write-Host "`n✅ Formulario generado en el escritorio. El cliente debe completarlo para enviar la solicitud."
-
-

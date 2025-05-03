@@ -3,7 +3,7 @@
 # 1. Generar Check ID
 $nombre = "Pablo Arman"
 $check_id = (Get-Date -Format "yyyyMMddHHmmss") + "_" + $nombre.Replace(" ", "").ToUpper()
-$horaEjecucion = Get-Date -Format "dd MM yyyy HH:mm:ss"
+$fechaHora = Get-Date -Format "dd MM yyyy HH:mm:ss"
 
 # 2. Recolectar datos técnicos
 $equipo     = $env:COMPUTERNAME
@@ -14,16 +14,16 @@ $procesador = (Get-WmiObject Win32_Processor).Name
 $ip         = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddress -notlike "169.*" } | Select-Object -First 1).IPAddress
 $impresoras = (Get-Printer | Select-Object -ExpandProperty Name) -join "; "
 
-# 3. Contenido HTML con codificación UTF-8 con BOM
+# 3. Generar HTML local con formulario manual
 $htmlContent = @"
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Solicitud de Asistencia Técnica</title>
+  <title>Solicitud de Asistencia T&eacute;cnica</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
+      font-family: Segoe UI, sans-serif;
       background-color: #f4f4f4;
       display: flex;
       justify-content: center;
@@ -38,7 +38,7 @@ $htmlContent = @"
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       text-align: center;
       width: 100%;
-      max-width: 480px;
+      max-width: 500px;
     }
     textarea {
       width: 100%;
@@ -65,9 +65,9 @@ $htmlContent = @"
 </head>
 <body>
   <div class="form-container">
-    <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Ejecutado el $horaEjecucion</p>
-    <h2><strong>Solicitud de asistencia técnica</strong></h2>
-    <p>Por favor, describí el problema:</p>
+    <p style="font-size:12px; margin-bottom:12px;">Ejecutado el $fechaHora</p>
+    <h2><strong>Solicitud de asistencia t&eacute;cnica</strong></h2>
+    <p>Por favor, describ&iacute; el problema:</p>
     <form method="POST" action="https://script.google.com/macros/s/AKfycbxZzyCZhE23Rpd3ZPJ_a5t5-g5jeMaClesIVnOZ22AUnGrplTetVrfJIKCv_NLh1Yyk/exec">
       <textarea name="problema" required></textarea>
       <input type="hidden" name="nombre" value="$nombre">
@@ -86,10 +86,9 @@ $htmlContent = @"
 </html>
 "@
 
-# 4. Guardar el archivo en el Escritorio como UTF-8 con BOM
+# 4. Guardar HTML en el escritorio y abrirlo
 $archivoHTML = [System.IO.Path]::Combine([Environment]::GetFolderPath("Desktop"), "asistance_formulario.html")
-$utf8WithBOM = New-Object System.Text.UTF8Encoding($true)
-[System.IO.File]::WriteAllText($archivoHTML, $htmlContent, $utf8WithBOM)
+[System.IO.File]::WriteAllText($archivoHTML, $htmlContent, [System.Text.Encoding]::UTF8)
 
-# 5. Abrir el archivo
 Start-Process $archivoHTML
+Write-Host "`n✅ Formulario generado y abierto. El cliente debe completarlo para enviar la solicitud."

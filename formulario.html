@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Solicitud de Asistencia Técnica</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .form-container {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 100%;
+      max-width: 450px;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin-top: 10px;
+      font-size: 14px;
+      padding: 10px;
+      resize: none;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      font-size: 16px;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 6px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .footer {
+      margin-top: 15px;
+      font-size: 12px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Solicitud de asistencia técnica</h2>
+    <p>Por favor, describí el problema:</p>
+    <textarea id="problema" required></textarea>
+    <button onclick="enviarSolicitud()">Enviar solicitud</button>
+    <div class="footer"><!--HORA--></div>
+  </div>
+
+  <script>
+    // 🔧 Configuración Firebase (reemplazá con la tuya)
+    const firebaseConfig = {
+      apiKey: "TU_API_KEY",
+      authDomain: "TU_DOMINIO.firebaseapp.com",
+      projectId: "asistancemaxirest",
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // 📦 Datos técnicos (inyectados desde PowerShell en HTML generado)
+    const datosTecnicos = {
+      nombre: "Pablo Arman",
+      check_id: "20250503165000_PABLOARMAN",
+      equipo: "PC-01",
+      usuario: "PABLO",
+      ram: "8.00 GB",
+      so: "Windows 10 Pro",
+      procesador: "Intel(R) Core(TM) i5-8265U",
+      ip: "192.168.0.123",
+      impresora: "EPSON L3150"
+    };
+
+    // ▶ Función para enviar solicitud
+    function enviarSolicitud() {
+      const problema = document.getElementById('problema').value;
+      db.collection("solicitudes").add({
+        ...datosTecnicos,
+        problema: problema,
+        fecha: new Date().toISOString()
+      })
+      .then(() => {
+        alert("✅ Solicitud enviada correctamente.");
+      })
+      .catch((error) => {
+        alert("❌ Error al enviar: " + error);
+      });
+    }
+  </script>
+</body>
+</html>

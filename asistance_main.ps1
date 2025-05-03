@@ -22,7 +22,7 @@ $htmlContent = @"
   <title>Solicitud de Asistencia Técnica</title>
   <style>
     body {
-      font-family: "Segoe UI", sans-serif;
+      font-family: ""Segoe UI"", sans-serif;
       background-color: #f4f4f4;
       display: flex;
       justify-content: center;
@@ -84,10 +84,12 @@ $htmlContent = @"
 </html>
 "@
 
-
 # 4. Guardar HTML en el escritorio y abrirlo
 $archivoHTML = [System.IO.Path]::Combine([Environment]::GetFolderPath("Desktop"), "asistance_formulario.html")
-Set-Content -Path $archivoHTML -Value $html -Encoding UTF8
+Set-Content -Path $archivoHTML -Value $htmlContent -Encoding UTF8
+
+Start-Process $archivoHTML
+Write-Host "`n✅ Formulario generado en el escritorio. El cliente debe completarlo para enviar la solicitud."
 
 Start-Process $archivoHTML
 Write-Host "`n✅ Formulario generado en el escritorio. El cliente debe completarlo para enviar la solicitud."

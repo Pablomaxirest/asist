@@ -96,7 +96,9 @@ $htmlContent = @"
 # 4. Guardar HTML en el escritorio con codificación UTF-8 sin BOM
 $archivoHTML = [System.IO.Path]::Combine([Environment]::GetFolderPath("Desktop"), "asistance_formulario.html")
 $utf8NoBom = New-Object System.Text.UTF8Encoding $false
-[System.IO.File]::WriteAllText($archivoHTML, $htmlContent, [System.Text.Encoding]::UTF8)
+$utf8WithBom = New-Object System.Text.UTF8Encoding($true)
+[System.IO.File]::WriteAllText($archivoHTML, $htmlContent, $utf8WithBom)
+
 
 
 # 5. Abrir el formulario en el navegador

@@ -14,54 +14,76 @@ $ip         = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddres
 $impresoras = (Get-Printer | Select-Object -ExpandProperty Name) -join "; "
 
 # 3. Generar HTML local con formulario manual
-$html = @"
+$htmlContent = @"
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <meta charset="utf-8">
-  <title>Solicitud de asistencia</title>
+  <meta charset="UTF-8">
+  <title>Solicitud de Asistencia Técnica</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
-      padding: 40px;
-      text-align: center;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
-    input, textarea, button {
-      font-size: 16px;
+    .form-container {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 100%;
+      max-width: 450px;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin-top: 10px;
+      font-size: 14px;
       padding: 10px;
-      margin: 10px;
-      width: 80%;
-      max-width: 500px;
+      resize: none;
     }
     button {
       background-color: #28a745;
       color: white;
+      font-size: 16px;
+      padding: 12px 25px;
       border: none;
       border-radius: 6px;
+      margin-top: 20px;
       cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
     }
   </style>
 </head>
 <body>
-  <h2>Solicitud de asistencia técnica</h2>
-  <p>Por favor, describí el problema:</p>
-  <form method="POST" action="https://script.google.com/macros/s/AKfycbxZzyCZhE23Rpd3ZPJ_a5t5-g5jeMaClesIVnOZ22AUnGrplTetVrfJIKCv_NLh1Yyk/exec">
-    <textarea name="problema" required placeholder="Escribí tu problema aquí..."></textarea><br>
-    <input type="hidden" name="check_id" value="$check_id">
-    <input type="hidden" name="nombre" value="$nombre">
-    <input type="hidden" name="equipo" value="$equipo">
-    <input type="hidden" name="usuario" value="$usuario">
-    <input type="hidden" name="so" value="$so">
-    <input type="hidden" name="ram" value="$ram">
-    <input type="hidden" name="procesador" value="$procesador">
-    <input type="hidden" name="ip" value="$ip">
-    <input type="hidden" name="impresora" value="$impresoras">
-    <button type="submit">Enviar solicitud</button>
-  </form>
+  <div class="form-container">
+    <h2>Solicitud de asistencia técnica</h2>
+    <p>Por favor, describí el problema:</p>
+    <form method="POST" action="https://script.google.com/macros/s/AKfycbxZzyCZhE23Rpd3ZPJ_a5t5-g5jeMaClesIVnOZ22AUnGrplTetVrfJIKCv_NLh1Yyk/exec">
+      <textarea name="problema" required></textarea>
+      <input type="hidden" name="nombre" value="$nombre">
+      <input type="hidden" name="check_id" value="$check_id">
+      <input type="hidden" name="equipo" value="$equipo">
+      <input type="hidden" name="usuario" value="$usuario">
+      <input type="hidden" name="so" value="$so">
+      <input type="hidden" name="ram" value="$ram">
+      <input type="hidden" name="procesador" value="$procesador">
+      <input type="hidden" name="ip" value="$ip">
+      <input type="hidden" name="impresora" value="$impresoras">
+      <button type="submit">Enviar solicitud</button>
+    </form>
+  </div>
 </body>
 </html>
 "@
+
 
 # 4. Guardar HTML en el escritorio y abrirlo
 $archivoHTML = [System.IO.Path]::Combine([Environment]::GetFolderPath("Desktop"), "asistance_formulario.html")

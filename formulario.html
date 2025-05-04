@@ -2,10 +2,10 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Solicitud de Asistencia Técnica</title>
+  <title>Solicitud de asistencia técnica</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
+      font-family: "Segoe UI", sans-serif;
       background-color: #f4f4f4;
       display: flex;
       justify-content: center;
@@ -17,102 +17,80 @@
       background: white;
       padding: 30px 40px;
       border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
       text-align: center;
-      max-width: 500px;
       width: 100%;
-    }
-    h2 {
-      margin-bottom: 10px;
-    }
-    p {
-      margin-top: 0;
+      max-width: 450px;
     }
     textarea {
       width: 100%;
       height: 100px;
-      padding: 10px;
-      font-size: 14px;
       margin-top: 10px;
-      margin-bottom: 20px;
+      font-size: 14px;
+      padding: 10px;
+      resize: none;
     }
     button {
       background-color: #28a745;
       color: white;
+      font-size: 16px;
       padding: 12px 25px;
       border: none;
       border-radius: 6px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    button:hover {
-      background-color: #218838;
-    }
-    #mensajeConfirmacion {
       margin-top: 20px;
-      color: #28a745;
-      font-weight: bold;
-      display: none;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <div class="form-container">
+    <p style="font-size: 12px; color: #444;"><!--HORA--></p>
     <h2>Solicitud de asistencia técnica</h2>
     <p>Por favor, describí el problema:</p>
-    <form id="formulario">
-      <textarea name="problema" id="problema" required></textarea>
-
-      <input type="hidden" name="nombre" value="Pablo Arman">
-      <input type="hidden" name="check_id" value="20250503165000_PABLOARMAN">
-      <input type="hidden" name="equipo" value="PC-01">
-      <input type="hidden" name="usuario" value="PABLO">
-      <input type="hidden" name="so" value="Windows 10 Pro">
-      <input type="hidden" name="ram" value="8 GB">
-      <input type="hidden" name="procesador" value="Intel Core i5">
-      <input type="hidden" name="ip" value="192.168.0.123">
-      <input type="hidden" name="impresora" value="EPSON L3150">
-
+    <form onsubmit="enviarFormulario(); return false;">
+      <textarea id="problema" required></textarea>
       <button type="submit">Enviar solicitud</button>
-      <div id="mensajeConfirmacion">✅ Solicitud enviada correctamente</div>
     </form>
   </div>
 
   <script type="module">
-    // Configuración de Firebase
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
     const firebaseConfig = {
-      apiKey: "AIzaSyAu6mL9jTyPzRhSoEAim_Xvaqr4Qf4aDk",
+      apiKey: "AIzaSyAu6fmL9j1yPrZhSoEAim_Xvaqr4Qf4aDK",
       authDomain: "asistancemaxirest.firebaseapp.com",
       projectId: "asistancemaxirest",
       storageBucket: "asistancemaxirest.appspot.com",
       messagingSenderId: "1020707175351",
-      appId: "1:1020707175351:web:45ab0e8bdbafd50199c632"
+      appId: "1:1020707175351:web:45ab0e8bbdafd50199c632",
+      measurementId: "G-HSY92K9DCB"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const form = document.getElementById("formulario");
-    const mensaje = document.getElementById("mensajeConfirmacion");
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const datos = Object.fromEntries(new FormData(form).entries());
-      datos.timestamp = new Date().toLocaleString("es-AR");
-
+    async function enviarFormulario() {
+      const problema = document.getElementById("problema").value;
       try {
-        await addDoc(collection(db, "solicitudes"), datos);
-        mensaje.style.display = "block";
-        form.reset();
-      } catch (error) {
-        alert("❌ Hubo un error al enviar la solicitud.");
-        console.error(error);
+        await addDoc(collection(db, "solicitudes"), {
+          nombre: "VALOR_NOMBRE",
+          check_id: "VALOR_CHECKID",
+          equipo: "VALOR_EQUIPO",
+          usuario: "VALOR_USUARIO",
+          so: "VALOR_SO",
+          ram: "VALOR_RAM",
+          procesador: "VALOR_PROCESADOR",
+          ip: "VALOR_IP",
+          impresora: "VALOR_IMPRESORA",
+          problema: problema,
+          timestamp: new Date()
+        });
+        alert("✅ Solicitud enviada correctamente.");
+      } catch (e) {
+        alert("❌ Error al enviar: " + e);
       }
-    });
+    }
   </script>
 </body>
 </html>

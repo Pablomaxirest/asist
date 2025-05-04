@@ -4,9 +4,12 @@
 echo "[INFO] Recolectando información del sistema..."
 $nombre         = "Pablo Arman"
 $codigoCliente  = "4444"
-$check_id       = (Get-Date -Format "yyyyMMddHHmmss") + "_" + $nombre.Replace(" ", "").ToUpper()
 $equipo         = $env:COMPUTERNAME
 $usuario        = $env:USERNAME
+
+# 📌 Timestamp formateado (sin segundos) y Check ID como identificador principal
+$timestamp      = Get-Date -Format "yyyyMMddHHmm"
+$check_id       = "$codigoCliente-$equipo-$timestamp"
 
 # ─────────────────────────────────────────────────────────────────────
 

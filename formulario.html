@@ -98,7 +98,12 @@
       const ram          = document.getElementById("ram").value;
       const procesador   = document.getElementById("procesador").value;
       const ip           = document.getElementById("ip").value;
-      const impresora    = document.getElementById("impresora").value;
+
+      // 🔸 Convertir impresoras en array real
+      const impresoras   = document.getElementById("impresora").value
+                            .split(";")
+                            .map(i => i.trim())
+                            .filter(i => i !== "");
 
       try {
         await db.collection("solicitudes").add({
@@ -111,7 +116,7 @@
           ram: ram,
           procesador: procesador,
           ip: ip,
-          impresora: impresora,
+          impresoras: impresoras, // array
           problema: problema,
           timestamp: new Date()
         });

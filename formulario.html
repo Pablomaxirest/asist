@@ -44,36 +44,37 @@
 </head>
 <body>
   <div class="form-container">
-    <p style="font-size: 12px; color: #444;">Ejecutado a las <!--HORA--></p>
+    <p style="font-size: 12px; color: #444;"><!--HORA--></p>
     <h2>Solicitud de asistencia técnica</h2>
     <p>Por favor, describí el problema:</p>
-    <form onsubmit="enviarFormulario(); return false;">
+    <form id="formulario">
       <textarea id="problema" required></textarea>
       <button type="submit">Enviar solicitud</button>
     </form>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+  <!-- Firebase SDK (sin módulos) -->
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
 
+  <script>
+    // Inicializar Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAu6fmL9j1yPrZhSoEAim_Xvaqr4Qf4aDK",
       authDomain: "asistancemaxirest.firebaseapp.com",
       projectId: "asistancemaxirest",
-      storageBucket: "asistancemaxirest.appspot.com",
-      messagingSenderId: "1020707175351",
-      appId: "1:1020707175351:web:45ab0e8bbdafd50199c632",
-      measurementId: "G-HSY92K9DCB"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-    async function enviarFormulario() {
+    // Envío del formulario
+    document.getElementById("formulario").addEventListener("submit", async function(e) {
+      e.preventDefault();
       const problema = document.getElementById("problema").value;
+
       try {
-        await addDoc(collection(db, "solicitudes"), {
+        await db.collection("solicitudes").add({
           nombre: "VALOR_NOMBRE",
           check_id: "VALOR_CHECKID",
           equipo: "VALOR_EQUIPO",
@@ -87,10 +88,10 @@
           timestamp: new Date()
         });
         alert("✅ Solicitud enviada correctamente.");
-      } catch (e) {
-        alert("❌ Error al enviar: " + e);
+      } catch (error) {
+        alert("❌ Error al enviar: " + error);
       }
-    }
+    });
   </script>
 </body>
 </html>

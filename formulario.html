@@ -44,12 +44,27 @@
 </head>
 <body>
   <div class="form-container">
-    <p style="font-size: 12px; color: #444;"><!--HORA--></p>
     <h2>Solicitud de asistencia técnica</h2>
     <p>Por favor, describí el problema:</p>
+
     <form id="formulario">
+      <!-- 📝 Campo visible para cliente -->
       <textarea id="problema" required></textarea>
+
+      <!-- 🔹 Información del cliente (oculta) -->
       <input type="hidden" id="codigo_cliente" value="VALOR_CODIGOCLIENTE">
+      <input type="hidden" id="nombre" value="VALOR_NOMBRE">
+      <input type="hidden" id="check_id" value="VALOR_CHECKID">
+      <input type="hidden" id="equipo" value="VALOR_EQUIPO">
+      <input type="hidden" id="usuario" value="VALOR_USUARIO">
+
+      <!-- 🔸 Información técnica del sistema (oculta) -->
+      <input type="hidden" id="so" value="VALOR_SO">
+      <input type="hidden" id="ram" value="VALOR_RAM">
+      <input type="hidden" id="procesador" value="VALOR_PROCESADOR">
+      <input type="hidden" id="ip" value="VALOR_IP">
+      <input type="hidden" id="impresora" value="VALOR_IMPRESORA">
+
       <button type="submit">Enviar solicitud</button>
     </form>
   </div>
@@ -72,21 +87,31 @@
     // Envío del formulario
     document.getElementById("formulario").addEventListener("submit", async function(e) {
       e.preventDefault();
-      const problema = document.getElementById("problema").value;
-      const codigoCliente = document.getElementById("codigo_cliente").value;
+
+      const problema     = document.getElementById("problema").value;
+      const codigo       = document.getElementById("codigo_cliente").value;
+      const nombre       = document.getElementById("nombre").value;
+      const check_id     = document.getElementById("check_id").value;
+      const equipo       = document.getElementById("equipo").value;
+      const usuario      = document.getElementById("usuario").value;
+      const so           = document.getElementById("so").value;
+      const ram          = document.getElementById("ram").value;
+      const procesador   = document.getElementById("procesador").value;
+      const ip           = document.getElementById("ip").value;
+      const impresora    = document.getElementById("impresora").value;
 
       try {
         await db.collection("solicitudes").add({
-          nombre: "VALOR_NOMBRE",
-          check_id: "VALOR_CHECKID",
-          equipo: "VALOR_EQUIPO",
-          usuario: "VALOR_USUARIO",
-          so: "VALOR_SO",
-          ram: "VALOR_RAM",
-          procesador: "VALOR_PROCESADOR",
-          ip: "VALOR_IP",
-          impresora: "VALOR_IMPRESORA",
-          codigo_cliente: codigoCliente,
+          codigo_cliente: codigo,
+          nombre: nombre,
+          check_id: check_id,
+          equipo: equipo,
+          usuario: usuario,
+          so: so,
+          ram: ram,
+          procesador: procesador,
+          ip: ip,
+          impresora: impresora,
           problema: problema,
           timestamp: new Date()
         });

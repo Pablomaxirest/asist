@@ -2,103 +2,117 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Asistance 2.0 - Solicitud de Asistencia</title>
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+  <title>Solicitud de Asistencia Técnica</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f4;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
     }
-    .container {
-      background: #fff;
-      padding: 30px;
+    .form-container {
+      background: white;
+      padding: 30px 40px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      max-width: 500px;
       width: 100%;
-      max-width: 480px;
+    }
+    h2 {
+      margin-bottom: 10px;
+    }
+    p {
+      margin-top: 0;
     }
     textarea {
       width: 100%;
       height: 100px;
-      margin-top: 10px;
       padding: 10px;
       font-size: 14px;
-      resize: none;
+      margin-top: 10px;
+      margin-bottom: 20px;
     }
     button {
-      margin-top: 20px;
       background-color: #28a745;
       color: white;
-      padding: 12px;
+      padding: 12px 25px;
       border: none;
       border-radius: 6px;
-      width: 100%;
-      font-size: 16px;
       cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    #mensajeConfirmacion {
+      margin-top: 20px;
+      color: #28a745;
+      font-weight: bold;
+      display: none;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Solicitud de asistencia</h2>
-    <p><strong>Nombre:</strong> <span id="nombre">Pablo Arman</span></p>
-    <p><strong>Equipo:</strong> <span id="equipo">PC-01</span></p>
-    <p><strong>Usuario:</strong> <span id="usuario">PABLO</span></p>
-    <p><strong>Sistema:</strong> <span id="so">Windows 10 Pro</span></p>
-    <p><strong>RAM:</strong> <span id="ram">8.00 GB</span></p>
-    <p><strong>Procesador:</strong> <span id="procesador">Intel Core i5</span></p>
-    <p><strong>IP:</strong> <span id="ip">192.168.0.123</span></p>
-    <p><strong>Impresoras:</strong> <span id="impresora">EPSON L3150</span></p>
-    <form onsubmit="enviarFormulario(); return false;">
-      <label for="problema">Describí el problema:</label>
-      <textarea id="problema" required></textarea>
+  <div class="form-container">
+    <h2>Solicitud de asistencia técnica</h2>
+    <p>Por favor, describí el problema:</p>
+    <form id="formulario">
+      <textarea name="problema" id="problema" required></textarea>
+
+      <input type="hidden" name="nombre" value="Pablo Arman">
+      <input type="hidden" name="check_id" value="20250503165000_PABLOARMAN">
+      <input type="hidden" name="equipo" value="PC-01">
+      <input type="hidden" name="usuario" value="PABLO">
+      <input type="hidden" name="so" value="Windows 10 Pro">
+      <input type="hidden" name="ram" value="8 GB">
+      <input type="hidden" name="procesador" value="Intel Core i5">
+      <input type="hidden" name="ip" value="192.168.0.123">
+      <input type="hidden" name="impresora" value="EPSON L3150">
+
       <button type="submit">Enviar solicitud</button>
+      <div id="mensajeConfirmacion">✅ Solicitud enviada correctamente</div>
     </form>
   </div>
 
-  <script>
+  <script type="module">
     // Configuración de Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
     const firebaseConfig = {
-      apiKey: "AIzaSyAu6fmu1jGyPzRhSoEAim_Xvaqr4Qf4aDK",
+      apiKey: "AIzaSyAu6mL9jTyPzRhSoEAim_Xvaqr4Qf4aDk",
       authDomain: "asistancemaxirest.firebaseapp.com",
       projectId: "asistancemaxirest",
       storageBucket: "asistancemaxirest.appspot.com",
       messagingSenderId: "1020707175351",
-      appId: "1:1020707175351:web:45ab0ebbdafd50199c632",
-      measurementId: "G-HSY92K9DCB"
+      appId: "1:1020707175351:web:45ab0e8bdbafd50199c632"
     };
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-    function enviarFormulario() {
-      const nombre     = document.getElementById("nombre").innerText;
-      const equipo     = document.getElementById("equipo").innerText;
-      const usuario    = document.getElementById("usuario").innerText;
-      const so         = document.getElementById("so").innerText;
-      const ram        = document.getElementById("ram").innerText;
-      const procesador = document.getElementById("procesador").innerText;
-      const ip         = document.getElementById("ip").innerText;
-      const impresora  = document.getElementById("impresora").innerText;
-      const problema   = document.getElementById("problema").value;
-      const timestamp  = new Date();
+    const form = document.getElementById("formulario");
+    const mensaje = document.getElementById("mensajeConfirmacion");
 
-      db.collection("solicitudes").add({
-        nombre, equipo, usuario, so, ram, procesador, ip, impresora, problema, timestamp
-      })
-      .then(() => {
-        alert("✅ Solicitud enviada correctamente");
-        document.querySelector("form").reset();
-      })
-      .catch((error) => {
-        alert("❌ Error al enviar: " + error);
-      });
-    }
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const datos = Object.fromEntries(new FormData(form).entries());
+      datos.timestamp = new Date().toLocaleString("es-AR");
+
+      try {
+        await addDoc(collection(db, "solicitudes"), datos);
+        mensaje.style.display = "block";
+        form.reset();
+      } catch (error) {
+        alert("❌ Hubo un error al enviar la solicitud.");
+        console.error(error);
+      }
+    });
   </script>
 </body>
 </html>

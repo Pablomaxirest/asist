@@ -12,6 +12,9 @@ $procesador = (Get-WmiObject Win32_Processor).Name
 $ip         = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddress -notlike "169.*" } | Select-Object -First 1).IPAddress
 $impresoras = (Get-Printer | Select-Object -ExpandProperty Name) -join "; "
 
+# Valor fijo por ahora del código de cliente
+$codigoCliente = "4444"
+
 # 2. Descargar HTML base desde GitHub
 $githubUrl = "https://raw.githubusercontent.com/Pablomaxirest/asist/main/formulario.html"
 echo "[INFO] Descargando formulario base desde GitHub..."
@@ -27,6 +30,7 @@ $htmlFinal = $htmlFinal -replace "VALOR_RAM", [regex]::Escape($ram)
 $htmlFinal = $htmlFinal -replace "VALOR_PROCESADOR", [regex]::Escape($procesador)
 $htmlFinal = $htmlFinal -replace "VALOR_IP", [regex]::Escape($ip)
 $htmlFinal = $htmlFinal -replace "VALOR_IMPRESORA", [regex]::Escape($impresoras)
+$htmlFinal = $htmlFinal -replace "VALOR_CODIGOCLIENTE", [regex]::Escape($codigoCliente)
 
 # Agregar hora de ejecución
 $hora = Get-Date -Format "HH:mm:ss"
